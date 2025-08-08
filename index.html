@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Discord Klon</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="logo">Discord</div>
+    <button id="openBtn" class="primary">Open Discord</button>
+  </header>
+
+  <main class="hero">
+    <div class="hero-text">
+      <h1>oyunlarla dolu, eğlenceli grup sohbetleri</h1>
+      <p>Arkadaşlarınla beraber sohbet et, sunucular oluştur, kanallar kur.</p>
+      <div class="cta">
+        <button class="ghost">Windows için indir</button>
+        <button class="primary" id="openBtn2">Discord'u tarayıcıda aç</button>
+      </div>
+    </div>
+    <div class="hero-img">
+      <!-- isteğe göre resim ekle -->
+      <img src="hero.png" alt="hero" style="max-width:420px;">
+    </div>
+  </main>
+
+<script>
+document.getElementById('openBtn').addEventListener('click', ()=> location.href='login.html');
+document.getElementById('openBtn2').addEventListener('click', ()=> location.href='login.html');
+</script>
+</body>
+</html>

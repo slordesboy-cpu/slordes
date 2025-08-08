@@ -1,0 +1,18 @@
+/* basit stil - özelleştir */
+:root {
+  --bg1: #0b1020;
+  --bg2: #17203b;
+  --accent: #5865f2;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#fff;min-height:100vh}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px}
+.logo{font-weight:700}
+.primary{background:var(--accent);border:none;padding:10px 16px;border-radius:8px;color:#fff;cursor:pointer}
+.ghost{background:#fff;color:#0b1020;border-radius:8px;padding:10px 16px;border:none;cursor:pointer}
+.hero{display:flex;gap:40px;align-items:center;padding:40px;justify-content:space-between}
+.hero-text{max-width:560px}
+.hero-text h1{font-size:44px;margin:0 0 16px}
+.hero-text p{color:#c6c8cc}
+.cta{margin-top:20px;display:flex;gap:12px}
+@media(max-width:900px){.hero{flex-direction:column;text-align:center}.hero-img{order:-1}}

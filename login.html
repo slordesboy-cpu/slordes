@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Giriş - Discord Klon</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div style="display:flex;height:100vh">
+    <div style="flex:1;background: radial-gradient(circle, rgba(88,101,242,0.15), transparent);"></div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center">
+      <div style="width:420px;background:#2f3136;padding:28px;border-radius:8px">
+        <h2>Tekrar hoş geldin!</h2>
+        <label style="font-size:12px;color:#9aa0a6">E-POSTA VEYA KULLANICI ADI</label>
+        <input id="loginUser" style="width:100%;padding:12px;margin-top:6px;background:#202225;border:none;border-radius:6px;color:#fff" placeholder="kullanıcı veya e-posta">
+        <label style="font-size:12px;color:#9aa0a6;margin-top:12px;display:block">ŞİFRE</label>
+        <input id="loginPass" type="password" style="width:100%;padding:12px;margin-top:6px;background:#202225;border:none;border-radius:6px;color:#fff" placeholder="şifre">
+
+        <button id="loginBtn" class="primary" style="margin-top:16px;width:100%">Giriş Yap</button>
+        <p style="margin-top:12px;color:#b9bbbe">Bir hesaba mı ihtiyacın var? <a href="register.html" style="color:#00b0f4">Kaydol</a></p>
+      </div>
+    </div>
+  </div>
+
+<script>
+async function postJSON(url, body){
+  const res = await fetch(url, {
+    method:'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+document.getElementById('loginBtn').addEventListener('click', async ()=>{
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  if(!username || !password) return alert('lütfen kullanıcı ve şifre girin');
+  try {
+    const res = await postJSON('http://localhost:3001/api/auth/login', { username, password });
+    if(res.token){
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('username', res.username);
+      location.href = 'chat.html';
+    } else {
+      alert(res.error || 'Giriş başarısız');
+    }
+  } catch(e){ alert('sunucuya bağlanamadı'); }
+});
+</script>
+</body>
+</html>

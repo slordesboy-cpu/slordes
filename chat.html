@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chat</title><link rel="stylesheet" href="styles.css"></head>
+<body style="display:flex;flex-direction:column;height:100vh;margin:0">
+  <header style="padding:10px 20px;background:#2f3136;color:#fff;display:flex;justify-content:space-between;align-items:center">
+    <div>Discord Klon</div>
+    <div id="usernameDisplay"></div>
+  </header>
+
+  <div style="display:flex;flex:1">
+    <aside style="width:220px;background:#202225;padding:12px;color:#b9bbbe"> 
+      <h4>Kanallar</h4>
+      <ul id="channels" style="list-style:none;padding:0;margin:0">
+        <li><button class="chanBtn" data-channel="genel"># genel</button></li>
+        <li><button class="chanBtn" data-channel="sohbet"># sohbet</button></li>
+      </ul>
+    </aside>
+
+    <main style="flex:1;display:flex;flex-direction:column">
+      <div id="messages" style="flex:1;padding:16px;overflow:auto;background:linear-gradient(180deg,#1f2326,#141516)"></div>
+      <div style="padding:12px;background:#2f3136;display:flex;gap:8px">
+        <input id="msgInput" style="flex:1;padding:10px;border-radius:6px;border:none;background:#202225;color:#fff" placeholder="Mesaj yaz...">
+        <button id="sendBtn" class="primary">Gönder</button>
+      </div>
+    </main>
+  </div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+const socket = io('http://localhost:3001');
+let currentChannel = 'genel';
+const username = localStorage.getItem('username') || 'Anon';
+document.getElementById('usernameDisplay').innerText = username;
+
+function addMsg(msg){
+  const d = document.createElement('div');
+  d.style.padding='6px 0';
+  d.innerText = `[${new Date(msg.createdAt).toLocaleTimeString()}] ${msg.username}: ${msg.content}`;
+  document.getElementById('messages').appendChild(d);
+  document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+}
+
+async function loadMessages(channel){
+  document.getElementById('messages').innerHTML = '';
+  const res = await fetch('http://localhost:3001/api/messages/' + channel);
+  const data = await res.json();
+  data.forEach(addMsg);
+}
+
+document.querySelectorAll('.chanBtn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    currentChannel = btn.dataset.channel;
+    socket.emit('joinChannel', currentChannel);
+    loadMessages(currentChannel);
+  });
+});
+
+// initial
+socket.emit('joinChannel', currentChannel);
+loadMessages(currentChannel);
+
+socket.on('newMessage', (msg) => {
+  if(msg.channel === currentChannel) addMsg(msg);
+});
+
+document.getElementById('sendBtn').addEventListener('click', ()=>{
+  const content = document.getElementById('msgInput').value.trim();
+  if(!content) return;
+  const payload = { channel: currentChannel, username, content };
+  socket.emit('sendMessage', payload);
+  document.getElementById('msgInput').value = '';
+});
+</script>
+</body>
+</html>
